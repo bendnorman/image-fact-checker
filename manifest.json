@@ -1,0 +1,14 @@
+{
+    "name": "Image Fact Checker",
+    "version": "1.0",
+    "description": "Image Fact Checker",
+    "manifest_version": 2,
+    "background": {
+      "persistent": false
+  },
+  "background": {"page": "background.html"},
+  "permissions": ["contextMenus"],
+  "icons": { "16": "icons/icon16.png",
+           "48": "icons/icon48.png",
+          "128": "icons/icon128.png" }
+  }
