@@ -2,6 +2,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 from SnopesParser import SnopesParser
 
+
 PORT_NUMBER = 8080
 
 # This class will handles any incoming request from
@@ -19,9 +20,13 @@ class myHandler(BaseHTTPRequestHandler):
         query = urlparse.parse_qs(self.path[2:])
         if query != {}:
             image_url = query['image_url'][0]
-            print image_url
-            # self.wfile.write("Malformed request")
-            print parser.hash_and_ratings
+            image_rating = parser.image_compare(image_url)
+            
+            if image_rating is not None:
+                self.wfile.write(image_rating)
+            else:
+                self.wfile.write("None")
+            
 
         
         # Send the html message
@@ -32,8 +37,11 @@ class myHandler(BaseHTTPRequestHandler):
 try:
     # Create a web server and define the handler to manage the
     # incoming request
-    parser = SnopesParser()
+    print "\nParsing Snopes Articles..."
+    parser = SnopesParser(threshold=10)
     parser.start()
+    print "Finished Parsing and Hashing Snopes data.\n"
+    
     
     server = HTTPServer(('', PORT_NUMBER), myHandler)
     print 'Started httpserver on port ', PORT_NUMBER
