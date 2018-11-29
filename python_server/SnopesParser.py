@@ -7,13 +7,14 @@ import requests
 from io import BytesIO
 
 import csv
+import json
 
 
 class SnopesParser:
 
     def __init__(self, threshold):
         self.hash_and_ratings = []
-        
+
         self.comparison_threshold = threshold
 
     def start(self):
@@ -49,17 +50,14 @@ class SnopesParser:
 
         except:
             return None
-        
+
     def image_compare(self, image_url):
         response = requests.get(image_url)
         img = Image.open(BytesIO(response.content))
         hash = imagehash.average_hash(img)
-        
+
         print "Checking for a match in the database..."
         for article in self.hash_and_ratings:
             if article['hash'] - hash <= self.comparison_threshold:
-                return (article['article_url'], article['rating'])
+                return json.dumps({'article_url': article['article_url'], 'rating': article['rating']})
         return None
-        # scrape
-        # hash
-        # save
